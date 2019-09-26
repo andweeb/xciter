@@ -4,32 +4,74 @@ const startButton = document.getElementById('start-button')
 const downloadButton = document.getElementById('download-button')
 
 fileInput.addEventListener('input', onFileInput);
-keysetInput.addEventListener('input', onKeysetInput);
+keysetInput.addEventListener('input', onFileInput);
 
 startButton.addEventListener('click', onClickStart);
 downloadButton.addEventListener('click', onClickDownload);
 
-function onKeysetInput(event) {
-    const files = event.target.files;
-    const targetFile = files[0];
+const worker = new Worker('worker.js');
 
-    const fileReader = new FileReader();
+const regexes = {
+    nspFilename: new RegExp(/Creating nsp (.+\.nsp)/),
+};
 
-    fileReader.onerror = (err) => console.error('Error reading keyset file', err);
-    fileReader.onprogress = (event) => console.log(`${event.loaded} bytes transferred`);
-    fileReader.onload = () => {
-        createDataFile(targetFile.name, new Uint8Array(fileReader.result));
-    };
-    fileReader.readAsArrayBuffer(targetFile);
+worker.onmessage = function(event) {
+    const data = event.data;
+
+    if (!data) {
+        return;
+    }
+
+    switch (data.action) {
+        case 'RUNTIME_INITIALIZED':
+            console.log('Runtime initialized, upload files now!')
+            break;
+
+        case 'PRINT': {
+            if (regexes.nspFilename.test(data.message)) {
+                const [, nspFilename] = regexes.nspFilename.exec(data.message);
+
+                console.log(`NSP file is named ${nspFilename}!`);
+
+                worker.nspFilename = nspFilename;
+            }
+            break;
+        }
+ 
+        case 'PRINT_ERR':
+            console.warn(data.message);
+            break;
+ 
+        case 'DOWNLOAD_FILE': {
+            console.log(`Downloading file ${data.filename}...`)
+
+            const a = window.document.createElement('a');
+            a.href = window.URL.createObjectURL(
+                new Blob(
+                    [ data.file ],
+                    { type: 'application/octet-stream' },
+                ),
+            );
+            a.download = data.filename;
+
+            // Append anchor to body.
+            document.body.appendChild(a)
+            a.click();
+
+            // Remove anchor from body
+            document.body.removeChild(a);
+
+            break;
+        }
+    }
 }
 
 function onFileInput(event) {
     const files = event.target.files;
     const targetFile = files[0];
-
     const fileReader = new FileReader();
 
-    fileReader.onerror = (err) => console.error(`Error reading XCI file`, err);
+    fileReader.onerror = (err) => console.error(`Error reading file`, err);
     fileReader.onprogress = (event) => console.log(`${event.loaded} bytes transferred`);
     fileReader.onload = () => {
         createDataFile(targetFile.name, new Uint8Array(fileReader.result));
@@ -38,42 +80,37 @@ function onFileInput(event) {
 }
 
 function createDataFile(name, data) {
-    console.log(`Creating ${name} data file...`);
+    console.log(`Sending ${name} file to web worker...`);
 
-    Module['FS_createDataFile'](
-        '/',
+    const message = {
         name,
-        data,
-        true,
-        true,
-        true,
-    );
+        file: data,
+        action: 'FILE_UPLOADED',
+    };
 
-    console.log(`Created ${name}.`);
+    worker.postMessage(message, [message.file.buffer]);
+
+    console.log('Sent!');
 }
 
 function onClickStart() {
-    const keysetFilename = keysetInput.files[0].name;
-    const xciFilename = fileInput.files[0].name;
+    const keysetName = keysetInput.files[0].name;
+    const xciName = fileInput.files[0].name;
 
     console.log('Calling main function...');
-    Module.callMain(['-k', `/${keysetFilename}`, `/${xciFilename}`]);
+    worker.postMessage({
+        xciName,
+        keysetName,
+        action: 'CONVERT_FILE',
+    });
     console.log('Completed file conversion');
 }
 
 function onClickDownload() {
-    const filename = '0100b7d0022ee000.nsp';
-    const file = FS.findObject(`/${filename}`).contents;
+    const filename = worker.nspFilename;
 
-    const a = window.document.createElement('a');
-
-    a.href = window.URL.createObjectURL(new Blob([ file ], { type: 'application/octet-stream' }));
-    a.download = filename;
-
-    // Append anchor to body.
-    document.body.appendChild(a)
-    a.click();
-
-    // Remove anchor from body
-    document.body.removeChild(a);
+    worker.postMessage({
+        filename,
+        action: 'DOWNLOAD_FILE',
+    });
 }

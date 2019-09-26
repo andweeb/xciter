@@ -33,9 +33,8 @@ LDFLAGS = sha.o \
 		  mbedtls/library/libmbedx509.bc
 EMFLAGS = -s INVOKE_RUN=0 \
 		  -s FORCE_FILESYSTEM=1 \
-		  -s EXIT_RUNTIME=0 \
+		  -s ENVIRONMENT='worker' \
 		  -s ALLOW_MEMORY_GROWTH=1 \
-		  -s EXPORT_NAME='XCIConverter' \
 		  -s "EXTRA_EXPORTED_RUNTIME_METHODS=['callMain']"
 endef
 
