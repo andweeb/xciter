@@ -1,7 +1,3 @@
-const XCIConverter = {
-    noInitialRun: true,
-};
-
 const fileInput = document.getElementById('file-input')
 const keysetInput = document.getElementById('keys-input')
 const startButton = document.getElementById('start-button')
@@ -44,7 +40,7 @@ function onFileInput(event) {
 function createDataFile(name, data) {
     console.log(`Creating ${name} data file...`);
 
-    XCIConverter['FS_createDataFile'](
+    Module['FS_createDataFile'](
         '/',
         name,
         data,
@@ -61,7 +57,7 @@ function onClickStart() {
     const xciFilename = fileInput.files[0].name;
 
     console.log('Calling main function...');
-    XCIConverter.callMain(['-k', `/${keysetFilename}`, `/${xciFilename}`]);
+    Module.callMain(['-k', `/${keysetFilename}`, `/${xciFilename}`]);
     console.log('Completed file conversion');
 }
 
