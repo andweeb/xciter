@@ -8,6 +8,7 @@
         "build": "next build",
         "start": "next start",
         "export": "next export",
+        "out": "npm run build && npm run export && touch out/.nojekyll",
         "prettier:check": "$(npm bin)/prettier --check 'src/**/*.{ts,tsx}'",
         "prettier:write": "$(npm bin)/prettier --write 'src/**/*.{ts,tsx}'"
     },
