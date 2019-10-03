@@ -1,0 +1,44 @@
+{
+    "name": "xciter",
+    "version": "1.0.0",
+    "description": "Batch XCI to NSP converter tool",
+    "main": "index.js",
+    "scripts": {
+        "dev": "next",
+        "build": "next build",
+        "start": "next start",
+        "export": "next export",
+        "prettier:check": "$(npm bin)/prettier --check 'src/**/*.{ts,tsx}'",
+        "prettier:write": "$(npm bin)/prettier --write 'src/**/*.{ts,tsx}'"
+    },
+    "dependencies": {
+        "@zeit/next-workers": "^1.0.0",
+        "boxicons": "^2.0.3",
+        "next": "^9.0.7",
+        "next-redux-wrapper": "^4.0.0",
+        "react": "^16.10.1",
+        "react-dom": "^16.10.1",
+        "react-dropzone": "^10.1.9",
+        "react-redux": "^7.1.1",
+        "worker-loader": "^2.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^12.7.8",
+        "@types/react": "^16.9.3",
+        "@types/react-dom": "^16.9.1",
+        "@types/react-redux": "^7.1.4",
+        "prettier": "1.18.2",
+        "tsconfig-paths-webpack-plugin": "^3.2.0",
+        "typescript": "^3.6.3"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/andweeb/xciter.git"
+    },
+    "author": "Andrew Kwon",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/andweeb/xciter/issues"
+    },
+    "homepage": "https://github.com/andweeb/xciter#readme"
+}
