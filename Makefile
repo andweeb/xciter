@@ -28,9 +28,9 @@ LDFLAGS = sha.o \
 		  ConvertUTF.o \
 		  romfs.o \
 		  rsa.o \
-		  mbedtls/library/libmbedcrypto.bc \
-		  mbedtls/library/libmbedtls.bc \
-		  mbedtls/library/libmbedx509.bc
+		  ../mbedtls/library/libmbedcrypto.bc \
+		  ../mbedtls/library/libmbedtls.bc \
+		  ../mbedtls/library/libmbedx509.bc
 EMFLAGS = -s INVOKE_RUN=0 \
 		  -s FORCE_FILESYSTEM=1 \
 		  -s ENVIRONMENT='worker' \
@@ -52,9 +52,6 @@ mbedtls:
 	# Generate Mbed TLS bitcode static libs to build folder
 	emcmake cmake -S $(MBEDTLSDIR) -B mbedtls -DEMSCRIPTEN_GENERATE_BITCODE_STATIC_LIBRARIES=1
 	emmake make lib -C mbedtls
-
-devserver:
-	python devserver.py
 
 clean_mbedtls:
 	rm -rf $(wd)/mbedtls
