@@ -1,4 +1,4 @@
-import { KeysetState, KeysetActions, KeysetActionTypes } from 'store/types';
+import { KeysetState, KeysetActions, ADD_KEYSET } from 'store/types';
 
 const initialState: KeysetState = {
     file: null,
@@ -9,7 +9,7 @@ export default function keysetReducer(
     action: KeysetActions,
 ): KeysetState {
     switch (action.type) {
-        case KeysetActionTypes.SET_KEYSET_FILE:
+        case ADD_KEYSET:
             return {
                 file: action.file,
             };

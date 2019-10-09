@@ -1,3 +1,4 @@
+import Icon, { Size } from 'components/icon';
 import color from 'styles/color';
 
 type Props = {
@@ -10,12 +11,21 @@ const Header: React.FunctionComponent<Props> = (props: Props) => (
             className="title-section"
             onClick={() => window.open('https://github.com/andweeb/xciter')}
         >
-            <i className="title-icon bx bx-bot bx-sm"></i>
+            <Icon
+                name="bot"
+                size={Size.Small}
+                color={color.chetwodeBlue}
+                className="title-icon"
+            />
             <h1 className="title">xciter</h1>
         </div>
-        <i
-            className="folder-icon bx bx-sm bxs-folder-open"
+        <Icon
+            solid
+            size={Size.Small}
+            name="folder-open"
+            color={color.mineShaft}
             onClick={props.openFileDialog}
+            className="folder-icon"
         />
         <style jsx>{`
             .header {
@@ -24,7 +34,8 @@ const Header: React.FunctionComponent<Props> = (props: Props) => (
                 padding: 15px 17px;
                 align-items: center;
                 justify-content: space-between;
-                background-color: ${color.lilacWhite};
+                background-color: ${color.alabaster};
+                border-bottom: 1px solid ${color.catskillWhite};
                 border-top-left-radius: 15px;
                 border-top-right-radius: 15px;
             }

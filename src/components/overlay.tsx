@@ -1,12 +1,17 @@
 import UploadIcon from 'components/upload-icon';
 import color from 'styles/color';
 
-const DropzoneOverlay = () => (
-    <div className="dropzone-overlay">
-        <UploadIcon animated />
-        <p>Drop it here!</p>
+type Props = {
+    children: JSX.Element;
+    opacity?: number;
+    forwardedRef?: React.RefObject<HTMLDivElement>;
+};
+
+const Overlay: React.FunctionComponent<Props> = props => (
+    <div className="overlay" ref={props.forwardedRef}>
+        {props.children}
         <style jsx>{`
-            .dropzone-overlay {
+            .overlay {
                 top: 0;
                 left: 0;
                 width: 100%;
@@ -18,9 +23,14 @@ const DropzoneOverlay = () => (
                 justify-content: center;
                 background-color: white;
                 color: ${color.chetwodeBlue};
+                opacity: ${props.opacity};
             }
         `}</style>
     </div>
 );
 
-export default DropzoneOverlay;
+Overlay.defaultProps = {
+    opacity: 1,
+} as Partial<Props>;
+
+export default Overlay;

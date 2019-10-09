@@ -17,11 +17,10 @@ const Root = () => {
             <App />
             <style jsx global>{`
                 body {
-                    color: ${color.mineShaft};
                     overflow: hidden;
                     font-family: Open Sans;
-                    background: rgb(238,241,252);
-                    background: linear-gradient(0deg, rgba(238,241,252,1) 0%, rgba(246,247,251,1) 100%);
+                    color: ${color.mineShaft};
+                    background: linear-gradient(0deg, ${color.selago} 0%, ${color.alabaster} 100%);
                 }
                 #__next {
                     width: 100vw;
