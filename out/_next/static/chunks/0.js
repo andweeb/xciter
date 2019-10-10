@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],{
+(this["webpackJsonp"] = this["webpackJsonp"] || []).push([[0],{
 
 /***/ "./node_modules/next/dist/client/dev/noop.js":
 /*!***************************************************!*\
