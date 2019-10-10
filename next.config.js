@@ -1,6 +1,7 @@
 const path = require('path');
 const withWorkers = require('@zeit/next-workers');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const assetPrefix = process.env.NODE_ENV === 'production' ? '/xciter' : '';
 
 module.exports = withWorkers({
     webpack(config, options) {
@@ -9,7 +10,7 @@ module.exports = withWorkers({
             loader: 'worker-loader',
             options: {
                 name: 'static/[hash].worker.js',
-                publicPath: '/_next/',
+                publicPath: `${assetPrefix}/_next/`,
             },
         });
 
@@ -23,5 +24,5 @@ module.exports = withWorkers({
 
         return config;
     },
-    assetPrefix: process.env.NODE_ENV === 'production' ? '/xciter' : '',
+    assetPrefix,
 });

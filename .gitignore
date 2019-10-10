@@ -2,4 +2,4 @@
 mbedtls/
 node_modules/
 .next/
-4nxci.*
+/4nxci.*
