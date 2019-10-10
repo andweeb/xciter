@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["static/runtime/main.js"],{
+(this["webpackJsonp"] = this["webpackJsonp"] || []).push([["static/runtime/main.js"],{
 
 /***/ "./node_modules/@babel/runtime-corejs2/core-js/array/is-array.js":
 /*!***********************************************************************!*\
