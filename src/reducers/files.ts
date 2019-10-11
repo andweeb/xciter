@@ -3,6 +3,7 @@ import {
     FilesState,
     FileStatus,
     ADD_FILES,
+    REMOVE_FILE,
     UPDATE_STATUS,
     UPDATE_LOG,
     INIT_WORKER,
@@ -58,6 +59,13 @@ export default function filesReducer(
             return {
                 ...state,
                 files: addedFiles.reduce(unionFiles, [] as Array<File>),
+            };
+        }
+
+        case REMOVE_FILE: {
+            return {
+                ...state,
+                files: state.files.filter(file => file.id !== action.file.id),
             };
         }
 

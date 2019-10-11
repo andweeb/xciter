@@ -3,6 +3,7 @@ import {
     FilesActions,
     FileStatus,
     ADD_FILES,
+    REMOVE_FILE,
     UPDATE_STATUS,
     UPDATE_LOG,
     INIT_WORKER,
@@ -16,6 +17,13 @@ export function addFiles(xciFiles: Array<File>): FilesActions {
     return {
         files: xciFiles,
         type: ADD_FILES,
+    };
+}
+
+export function removeFile(xciFile: File): FilesActions {
+    return {
+        file: xciFile,
+        type: REMOVE_FILE,
     };
 }
 

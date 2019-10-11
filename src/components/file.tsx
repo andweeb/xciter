@@ -1,6 +1,7 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Icon, { Size, Props as IconProps } from 'components/icon';
 import { abbreviateFileSize } from 'lib/bytes';
+import { removeFile } from 'actions/files';
 import { FileStatus } from 'store/types';
 import color from 'styles/color';
 import { Store } from 'store/types';
@@ -37,6 +38,7 @@ const statusTypes = {
 };
 
 const File: React.FunctionComponent<Props> = props => {
+    const dispatch = useDispatch();
     const storeFile = useSelector((state: Store) =>
         state.files.files.find(file => file.id === props.file.id),
     );
@@ -124,7 +126,7 @@ const File: React.FunctionComponent<Props> = props => {
                         name="trash"
                         size={Size.Small}
                         color={color.chetwodeBlue}
-                        onClick={() => console.log('TODO')}
+                        onClick={() => dispatch(removeFile(props.file))}
                     />
                 </div>
             </div>

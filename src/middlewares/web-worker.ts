@@ -3,6 +3,7 @@ import {
     FilesActions,
     ADD_KEYSET,
     INIT_WORKER,
+    REMOVE_FILE,
     CREATE_FILE,
     CREATE_MULTIPART_FILE,
     CONVERT_FILE,
@@ -15,7 +16,9 @@ import XCIWorker from 'workers/XCIWorker';
 
 type WebWorkerMiddleware = Middleware<Store, Function, Dispatch<AnyAction>>;
 
+// Maintain a map of workers in this middleware
 const workers = new Map();
+
 const middleware: WebWorkerMiddleware = store => next => action => {
     const result = next(action);
     const state = store.getState() as any;
@@ -44,6 +47,16 @@ const middleware: WebWorkerMiddleware = store => next => action => {
                 worker.keyset = action.file;
                 worker.createKeyset();
             });
+            break;
+
+        case REMOVE_FILE:
+            const worker = workers.get(action.id);
+
+            if (worker) {
+                worker.terminateWorker();
+                workers.delete(action.id);
+            }
+
             break;
 
         case CREATE_FILE: {
@@ -84,7 +97,11 @@ const middleware: WebWorkerMiddleware = store => next => action => {
             let transferIndex = 0;
 
             // Split into multipart file chunks
-            for (let i = 0, index = 0; i < action.file.size; i += MAX_CHUNK_THRESHOLD, index++) {
+            for (
+                let i = 0, index = 0;
+                i < action.file.size;
+                i += MAX_CHUNK_THRESHOLD, index++
+            ) {
                 const lastByte = i + MAX_CHUNK_THRESHOLD - 1;
                 const chunk = action.file.slice(i, lastByte);
 

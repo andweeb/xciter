@@ -13,6 +13,7 @@ export enum FileStatus {
 export const ADD_KEYSET = 'ADD_KEYSET';
 // Files actions
 export const ADD_FILES = 'ADD_FILES';
+export const REMOVE_FILE = 'REMOVE_FILE';
 export const INIT_WORKER = 'INIT_WORKER';
 export const CREATE_FILE = 'CREATE_FILE';
 export const CREATE_MULTIPART_FILE = 'CREATE_MULTIPART_FILE';
@@ -38,6 +39,10 @@ export interface FilesState {
 export interface AddFilesAction {
     type: typeof ADD_FILES;
     files: Array<File>;
+}
+export interface RemoveFileAction {
+    type: typeof REMOVE_FILE;
+    file: File;
 }
 export interface UpdateStatusAction {
     type: typeof UPDATE_STATUS;
@@ -75,6 +80,7 @@ export interface DownloadFileAction {
 }
 export type FilesActions =
     | AddFilesAction
+    | RemoveFileAction
     | InitWorkerAction
     | CreateFileAction
     | CreateMultiPartFileAction

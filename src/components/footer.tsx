@@ -20,11 +20,13 @@ const Footer: React.FunctionComponent<Props> = (props: Props) => {
 
     const convert = useCallback(() => {
         // TODO: Strategize and dispatch conversion process action for specific files
-        readyFiles.forEach(file => dispatch(
-            file.size > MAX_CHUNK_THRESHOLD
-                ? createMultiPartFile(file.id, file)
-                : createFile(file.id, file)
-        ));
+        readyFiles.forEach(file =>
+            dispatch(
+                file.size > MAX_CHUNK_THRESHOLD
+                    ? createMultiPartFile(file.id, file)
+                    : createFile(file.id, file),
+            ),
+        );
     }, [readyFiles]);
 
     const isButtonDisabled = !keyset || !readyFiles.length;

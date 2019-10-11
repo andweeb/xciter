@@ -81,7 +81,8 @@ self.onmessage = (event: MessageEvent) => {
         case 'CREATE_MULTIPART_FILE': {
             const { name, data } = multipartFile;
 
-            const startMessage = 'Creating multi-part file in virtual filesystem...';
+            const startMessage =
+                'Creating multi-part file in virtual filesystem...';
             self.postMessage({ action: types.PRINT, message: startMessage });
 
             self.Module['FS_createDataFile']('/', name, data, true, true, true);
