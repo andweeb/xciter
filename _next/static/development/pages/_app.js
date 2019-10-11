@@ -13043,16 +13043,18 @@ function (_App) {
 /*!******************************!*\
   !*** ./src/actions/files.ts ***!
   \******************************/
-/*! exports provided: addFiles, updateStatus, updateLog, initWorker, prepareFile, convertFile, downloadFile */
+/*! exports provided: addFiles, removeFile, updateStatus, updateLog, initWorker, createFile, createMultiPartFile, convertFile, downloadFile */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addFiles", function() { return addFiles; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeFile", function() { return removeFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateStatus", function() { return updateStatus; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateLog", function() { return updateLog; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initWorker", function() { return initWorker; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "prepareFile", function() { return prepareFile; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createFile", function() { return createFile; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createMultiPartFile", function() { return createMultiPartFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "convertFile", function() { return convertFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "downloadFile", function() { return downloadFile; });
 /* harmony import */ var store_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! store/types */ "./src/store/types.ts");
@@ -13061,6 +13063,12 @@ function addFiles(xciFiles) {
   return {
     files: xciFiles,
     type: store_types__WEBPACK_IMPORTED_MODULE_0__["ADD_FILES"]
+  };
+}
+function removeFile(xciFile) {
+  return {
+    file: xciFile,
+    type: store_types__WEBPACK_IMPORTED_MODULE_0__["REMOVE_FILE"]
   };
 }
 function updateStatus(id, status) {
@@ -13084,10 +13092,18 @@ function initWorker(id) {
     type: store_types__WEBPACK_IMPORTED_MODULE_0__["INIT_WORKER"]
   };
 }
-function prepareFile(id) {
+function createFile(id, file) {
   return {
     id: id,
+    file: file,
     type: store_types__WEBPACK_IMPORTED_MODULE_0__["CREATE_FILE"]
+  };
+}
+function createMultiPartFile(id, file) {
+  return {
+    id: id,
+    file: file,
+    type: store_types__WEBPACK_IMPORTED_MODULE_0__["CREATE_MULTIPART_FILE"]
   };
 }
 function convertFile(id) {
@@ -13110,15 +13126,18 @@ function downloadFile(id, nspName) {
 /*!**************************!*\
   !*** ./src/lib/bytes.ts ***!
   \**************************/
-/*! exports provided: abbreviateFileSize */
+/*! exports provided: MAX_CHUNK_THRESHOLD, abbreviateFileSize */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_CHUNK_THRESHOLD", function() { return MAX_CHUNK_THRESHOLD; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "abbreviateFileSize", function() { return abbreviateFileSize; });
 /* harmony import */ var _babel_runtime_corejs2_core_js_parse_float__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/parse-float */ "./node_modules/@babel/runtime-corejs2/core-js/parse-float.js");
 /* harmony import */ var _babel_runtime_corejs2_core_js_parse_float__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_parse_float__WEBPACK_IMPORTED_MODULE_0__);
 
+// 1.5 GB -> 1,610,612,736 bytes
+var MAX_CHUNK_THRESHOLD = 1610612736;
 function abbreviateFileSize(bytes) {
   var precision = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
 
@@ -13157,7 +13176,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
+// Maintain a map of workers in this middleware
 var workers = new _babel_runtime_corejs2_core_js_map__WEBPACK_IMPORTED_MODULE_0___default.a();
 
 var middleware = function middleware(store) {
@@ -13182,12 +13201,20 @@ var middleware = function middleware(store) {
           });
           break;
 
+        case store_types__WEBPACK_IMPORTED_MODULE_1__["REMOVE_FILE"]:
+          var worker = workers.get(action.id);
+
+          if (worker) {
+            worker.terminateWorker();
+            workers["delete"](action.id);
+          }
+
+          break;
+
         case store_types__WEBPACK_IMPORTED_MODULE_1__["CREATE_FILE"]:
           {
-            var worker = workers.get(action.id);
-            var file = state.files.files.find(function (file) {
-              return file.id === action.id;
-            });
+            var _worker = workers.get(action.id);
+
             var fileReader = new FileReader();
             var isFirstProgressMessage = true;
 
@@ -13205,29 +13232,78 @@ var middleware = function middleware(store) {
 
             fileReader.onload = function (event) {
               if (event.target && event.target.result) {
-                worker.createFile('xci', file.name, new Uint8Array(event.target.result));
+                _worker.createFile('xci', action.file.name, new Uint8Array(event.target.result));
               }
             };
 
-            store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_2__["updateStatus"])(action.id, store_types__WEBPACK_IMPORTED_MODULE_1__["FileStatus"].Preparing));
-            fileReader.readAsArrayBuffer(file);
+            fileReader.readAsArrayBuffer(action.file);
+            break;
+          }
+
+        case store_types__WEBPACK_IMPORTED_MODULE_1__["CREATE_MULTIPART_FILE"]:
+          {
+            var _worker2 = workers.get(action.id);
+
+            var _fileReader = new FileReader();
+
+            var fileChunks = [];
+            var transferIndex = 0; // Split into multipart file chunks
+
+            for (var i = 0, index = 0; i < action.file.size; i += lib_bytes__WEBPACK_IMPORTED_MODULE_3__["MAX_CHUNK_THRESHOLD"], index++) {
+              var lastByte = i + lib_bytes__WEBPACK_IMPORTED_MODULE_3__["MAX_CHUNK_THRESHOLD"] - 1;
+              var chunk = action.file.slice(i, lastByte);
+              fileChunks.push(chunk);
+            }
+
+            var _isFirstProgressMessage = true;
+
+            _fileReader.onprogress = function (event) {
+              var shouldOverwrite = !_isFirstProgressMessage;
+              var fileSize = Object(lib_bytes__WEBPACK_IMPORTED_MODULE_3__["abbreviateFileSize"])(event.loaded);
+              var message = "".concat(fileSize, " transferred to worker.");
+              store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_2__["updateLog"])(action.id, message, shouldOverwrite));
+              _isFirstProgressMessage = false;
+            };
+
+            _fileReader.onerror = function (err) {
+              return console.error("Error reading file", err);
+            };
+
+            _fileReader.onload = function (event) {
+              transferIndex = transferIndex + 1; // Build multipart file in the worker
+
+              if (event.target && event.target.result) {
+                _worker2.buildMultiPartFile(action.file.name, new Uint8Array(event.target.result));
+              } // Kick off next multipart chunk file or signal to create the file
+
+
+              if (fileChunks[transferIndex]) {
+                _fileReader.readAsArrayBuffer(fileChunks[transferIndex]);
+              } else {
+                _worker2.createMultiPartFile();
+              }
+            }; // Start multipart file transfer
+
+
+            _fileReader.readAsArrayBuffer(fileChunks[transferIndex]);
+
             break;
           }
 
         case store_types__WEBPACK_IMPORTED_MODULE_1__["CONVERT_FILE"]:
           {
-            var _worker = workers.get(action.id);
+            var _worker3 = workers.get(action.id);
 
-            _worker.convertFile();
+            _worker3.convertFile();
 
             break;
           }
 
         case store_types__WEBPACK_IMPORTED_MODULE_1__["DOWNLOAD_FILE"]:
           {
-            var _worker2 = workers.get(action.id);
+            var _worker4 = workers.get(action.id);
 
-            _worker2.downloadFile(action.nspName);
+            _worker4.downloadFile(action.nspName);
 
             break;
           }
@@ -13303,6 +13379,15 @@ function filesReducer() {
         });
       }
 
+    case store_types__WEBPACK_IMPORTED_MODULE_3__["REMOVE_FILE"]:
+      {
+        return Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_0__["default"])({}, state, {
+          files: state.files.filter(function (file) {
+            return file.id !== action.file.id;
+          })
+        });
+      }
+
     case store_types__WEBPACK_IMPORTED_MODULE_3__["UPDATE_STATUS"]:
       return Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_0__["default"])({}, state, {
         files: state.files.map(applyFileUpdate(action.id, 'status', action.status))
@@ -13325,6 +13410,7 @@ function filesReducer() {
       }
 
     case store_types__WEBPACK_IMPORTED_MODULE_3__["CREATE_FILE"]:
+    case store_types__WEBPACK_IMPORTED_MODULE_3__["CREATE_MULTIPART_FILE"]:
       return Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_0__["default"])({}, state, {
         files: state.files.map(applyFileUpdate(action.id, 'status', store_types__WEBPACK_IMPORTED_MODULE_3__["FileStatus"].Preparing))
       });
@@ -13428,7 +13514,7 @@ var composeEnhancers = global.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || redux__WEB
 /*!****************************!*\
   !*** ./src/store/types.ts ***!
   \****************************/
-/*! exports provided: FileStatus, ADD_KEYSET, ADD_FILES, INIT_WORKER, CREATE_FILE, UPDATE_STATUS, UPDATE_LOG, CONVERT_FILE, DOWNLOAD_FILE */
+/*! exports provided: FileStatus, ADD_KEYSET, ADD_FILES, REMOVE_FILE, INIT_WORKER, CREATE_FILE, CREATE_MULTIPART_FILE, UPDATE_STATUS, UPDATE_LOG, CONVERT_FILE, DOWNLOAD_FILE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13436,8 +13522,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FileStatus", function() { return FileStatus; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_KEYSET", function() { return ADD_KEYSET; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_FILES", function() { return ADD_FILES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REMOVE_FILE", function() { return REMOVE_FILE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "INIT_WORKER", function() { return INIT_WORKER; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CREATE_FILE", function() { return CREATE_FILE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CREATE_MULTIPART_FILE", function() { return CREATE_MULTIPART_FILE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UPDATE_STATUS", function() { return UPDATE_STATUS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UPDATE_LOG", function() { return UPDATE_LOG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CONVERT_FILE", function() { return CONVERT_FILE; });
@@ -13458,8 +13546,10 @@ var FileStatus; // Keyset actions
 var ADD_KEYSET = 'ADD_KEYSET'; // Files actions
 
 var ADD_FILES = 'ADD_FILES';
+var REMOVE_FILE = 'REMOVE_FILE';
 var INIT_WORKER = 'INIT_WORKER';
 var CREATE_FILE = 'CREATE_FILE';
+var CREATE_MULTIPART_FILE = 'CREATE_MULTIPART_FILE';
 var UPDATE_STATUS = 'UPDATE_STATUS';
 var UPDATE_LOG = 'UPDATE_LOG';
 var CONVERT_FILE = 'CONVERT_FILE';
@@ -13619,6 +13709,23 @@ function () {
       this.worker.postMessage(message, [message.file.buffer]);
     }
   }, {
+    key: "buildMultiPartFile",
+    value: function buildMultiPartFile(name, data) {
+      var message = {
+        name: name,
+        file: data,
+        action: 'BUILD_MULTIPART_FILE'
+      };
+      this.worker.postMessage(message, [message.file.buffer]);
+    }
+  }, {
+    key: "createMultiPartFile",
+    value: function createMultiPartFile(name, data) {
+      this.worker.postMessage({
+        action: 'CREATE_MULTIPART_FILE'
+      });
+    }
+  }, {
     key: "convertFile",
     value: function convertFile() {
       this.worker.postMessage({
@@ -13659,7 +13766,7 @@ function () {
 /***/ (function(module, exports) {
 
 module.exports = function() {
-  return new Worker("/_next/" + "static/60fdad64ffbeb5437496.worker.js");
+  return new Worker("/_next/" + "static/a072a1fce1244615fcb2.worker.js");
 };
 
 /***/ }),
