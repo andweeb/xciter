@@ -7,6 +7,7 @@ import {
     UPDATE_LOG,
     INIT_WORKER,
     CREATE_FILE,
+    CREATE_MULTIPART_FILE,
     CONVERT_FILE,
     DOWNLOAD_FILE,
 } from 'store/types';
@@ -97,6 +98,7 @@ export default function filesReducer(
         }
 
         case CREATE_FILE:
+        case CREATE_MULTIPART_FILE:
             return {
                 ...state,
                 files: state.files.map(

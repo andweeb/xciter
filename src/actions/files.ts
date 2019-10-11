@@ -7,6 +7,7 @@ import {
     UPDATE_LOG,
     INIT_WORKER,
     CREATE_FILE,
+    CREATE_MULTIPART_FILE,
     CONVERT_FILE,
     DOWNLOAD_FILE,
 } from 'store/types';
@@ -46,10 +47,19 @@ export function initWorker(id: string): FilesActions {
     };
 }
 
-export function prepareFile(id: string): FilesActions {
+export function createFile(id: string, file: File): FilesActions {
     return {
         id,
+        file,
         type: CREATE_FILE,
+    };
+}
+
+export function createMultiPartFile(id: string, file: File): FilesActions {
+    return {
+        id,
+        file,
+        type: CREATE_MULTIPART_FILE,
     };
 }
 

@@ -4,12 +4,13 @@ import {
     ADD_KEYSET,
     INIT_WORKER,
     CREATE_FILE,
+    CREATE_MULTIPART_FILE,
     CONVERT_FILE,
     DOWNLOAD_FILE,
 } from 'store/types';
 import { updateLog, updateStatus } from 'actions/files';
 import { FileStatus } from 'store/types';
-import { abbreviateFileSize } from 'lib/bytes';
+import { abbreviateFileSize, MAX_CHUNK_THRESHOLD } from 'lib/bytes';
 import XCIWorker from 'workers/XCIWorker';
 
 type WebWorkerMiddleware = Middleware<Store, Function, Dispatch<AnyAction>>;
@@ -47,13 +48,8 @@ const middleware: WebWorkerMiddleware = store => next => action => {
 
         case CREATE_FILE: {
             const worker = workers.get(action.id);
-            const file = state.files.files.find(
-                (file: File) => file.id === action.id,
-            );
             const fileReader: FileReader = new FileReader();
-
             let isFirstProgressMessage = true;
-
             fileReader.onprogress = (event: ProgressEvent<FileReader>) => {
                 const shouldOverwrite = !isFirstProgressMessage;
                 const fileSize = abbreviateFileSize(event.loaded);
@@ -70,15 +66,65 @@ const middleware: WebWorkerMiddleware = store => next => action => {
                 if (event.target && event.target.result) {
                     worker.createFile(
                         'xci',
-                        file.name,
+                        action.file.name,
                         new Uint8Array(event.target.result as ArrayBuffer),
                     );
                 }
             };
 
-            store.dispatch(updateStatus(action.id, FileStatus.Preparing));
+            fileReader.readAsArrayBuffer(action.file);
 
-            fileReader.readAsArrayBuffer(file);
+            break;
+        }
+
+        case CREATE_MULTIPART_FILE: {
+            const worker = workers.get(action.id);
+            const fileReader: FileReader = new FileReader();
+            const fileChunks: Array<any> = [];
+            let transferIndex = 0;
+
+            // Split into multipart file chunks
+            for (let i = 0, index = 0; i < action.file.size; i += MAX_CHUNK_THRESHOLD, index++) {
+                const lastByte = i + MAX_CHUNK_THRESHOLD - 1;
+                const chunk = action.file.slice(i, lastByte);
+
+                fileChunks.push(chunk);
+            }
+
+            let isFirstProgressMessage = true;
+            fileReader.onprogress = (event: ProgressEvent<FileReader>) => {
+                const shouldOverwrite = !isFirstProgressMessage;
+                const fileSize = abbreviateFileSize(event.loaded);
+                const message = `${fileSize} transferred to worker.`;
+
+                store.dispatch(updateLog(action.id, message, shouldOverwrite));
+                isFirstProgressMessage = false;
+            };
+
+            fileReader.onerror = (err: ProgressEvent<FileReader>) =>
+                console.error(`Error reading file`, err);
+
+            fileReader.onload = (event: ProgressEvent<FileReader>) => {
+                transferIndex = transferIndex + 1;
+
+                // Build multipart file in the worker
+                if (event.target && event.target.result) {
+                    worker.buildMultiPartFile(
+                        action.file.name,
+                        new Uint8Array(event.target.result as ArrayBuffer),
+                    );
+                }
+
+                // Kick off next multipart chunk file or signal to create the file
+                if (fileChunks[transferIndex]) {
+                    fileReader.readAsArrayBuffer(fileChunks[transferIndex]);
+                } else {
+                    worker.createMultiPartFile();
+                }
+            };
+
+            // Start multipart file transfer
+            fileReader.readAsArrayBuffer(fileChunks[transferIndex]);
 
             break;
         }

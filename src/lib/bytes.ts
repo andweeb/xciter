@@ -1,3 +1,6 @@
+// 1.5 GB -> 1,610,612,736 bytes
+export const MAX_CHUNK_THRESHOLD = 1610612736;
+
 export function abbreviateFileSize(
     bytes: number,
     precision: number = 2,

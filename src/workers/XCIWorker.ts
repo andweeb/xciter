@@ -139,6 +139,20 @@ export default class XCIWorker {
         this.worker.postMessage(message, [message.file.buffer]);
     }
 
+    buildMultiPartFile(name: string, data: Uint8Array) {
+        const message = {
+            name,
+            file: data,
+            action: 'BUILD_MULTIPART_FILE',
+        };
+
+        this.worker.postMessage(message, [message.file.buffer]);
+    }
+
+    createMultiPartFile(name: string, data: Uint8Array) {
+        this.worker.postMessage({ action: 'CREATE_MULTIPART_FILE' });
+    }
+
     convertFile() {
         this.worker.postMessage({
             id: this.id,

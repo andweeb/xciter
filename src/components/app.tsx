@@ -6,7 +6,7 @@ import color from 'styles/color';
 import Footer from 'components/footer';
 import Header from 'components/header';
 import Workspace from 'components/workspace';
-import { addFiles, initWorker, prepareFile } from 'actions/files';
+import { addFiles, initWorker } from 'actions/files';
 import { addKeyset } from 'actions/keyset';
 import { FileStatus, KeysetActions } from 'store/types';
 

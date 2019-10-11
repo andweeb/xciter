@@ -78,18 +78,17 @@ self.onmessage = (event: MessageEvent) => {
             break;
         }
 
-        case 'BUILD_MULTIPART_FILE':
-            multipartFile.name = data.name;
-            multipartFile.data = multipartFile.data.concat(data.file);
-            break;
-
         case 'CREATE_MULTIPART_FILE': {
             const { name, data } = multipartFile;
 
-            const message = 'Creating file in virtual filesystem...';
+            const startMessage = 'Creating multi-part file in virtual filesystem...';
+            self.postMessage({ action: types.PRINT, message: startMessage });
+
             self.Module['FS_createDataFile']('/', name, data, true, true, true);
 
-            console.log(`Created ${multipartFile.name} in virtual filesystem.`);
+            const doneMessage = `Created ${multipartFile.name} in virtual filesystem.`;
+            self.postMessage({ action: types.PRINT, message: doneMessage });
+
             self.postMessage({
                 name: multipartFile.name,
                 action: types.FILE_CREATED,
@@ -97,6 +96,15 @@ self.onmessage = (event: MessageEvent) => {
 
             break;
         }
+
+        case 'BUILD_MULTIPART_FILE':
+            if (!multipartFile.name) {
+                multipartFile.name = data.name;
+            }
+
+            multipartFile.data = multipartFile.data.concat(data.file);
+
+            break;
 
         case 'CONVERT_FILE':
             self.Module.callMain([

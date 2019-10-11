@@ -15,6 +15,7 @@ export const ADD_KEYSET = 'ADD_KEYSET';
 export const ADD_FILES = 'ADD_FILES';
 export const INIT_WORKER = 'INIT_WORKER';
 export const CREATE_FILE = 'CREATE_FILE';
+export const CREATE_MULTIPART_FILE = 'CREATE_MULTIPART_FILE';
 export const UPDATE_STATUS = 'UPDATE_STATUS';
 export const UPDATE_LOG = 'UPDATE_LOG';
 export const CONVERT_FILE = 'CONVERT_FILE';
@@ -56,6 +57,12 @@ export interface InitWorkerAction {
 export interface CreateFileAction {
     type: typeof CREATE_FILE;
     id: string;
+    file: File;
+}
+export interface CreateMultiPartFileAction {
+    type: typeof CREATE_MULTIPART_FILE;
+    id: string;
+    file: File;
 }
 export interface ConvertFileAction {
     type: typeof CONVERT_FILE;
@@ -70,6 +77,7 @@ export type FilesActions =
     | AddFilesAction
     | InitWorkerAction
     | CreateFileAction
+    | CreateMultiPartFileAction
     | UpdateStatusAction
     | UpdateLogAction
     | ConvertFileAction

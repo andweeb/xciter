@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon, { Size } from 'components/icon';
-import { prepareFile } from 'actions/files';
+import { createFile, createMultiPartFile } from 'actions/files';
+import { MAX_CHUNK_THRESHOLD } from 'lib/bytes';
 import color from 'styles/color';
 import { FileStatus, Store } from 'store/types';
 
@@ -19,7 +20,11 @@ const Footer: React.FunctionComponent<Props> = (props: Props) => {
 
     const convert = useCallback(() => {
         // TODO: Strategize and dispatch conversion process action for specific files
-        readyFiles.forEach(file => dispatch(prepareFile(file.id)));
+        readyFiles.forEach(file => dispatch(
+            file.size > MAX_CHUNK_THRESHOLD
+                ? createMultiPartFile(file.id, file)
+                : createFile(file.id, file)
+        ));
     }, [readyFiles]);
 
     const isButtonDisabled = !keyset || !readyFiles.length;
