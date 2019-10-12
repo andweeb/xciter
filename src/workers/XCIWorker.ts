@@ -46,12 +46,28 @@ export default class XCIWorker {
 
         switch (data.action) {
             case 'PRINT': {
-                this.store.dispatch(updateLog(this.id, data.message));
+                const { files } = this.store.getState().files;
+                const file = files.find((file: File) => file.id === this.id);
+                this.store.dispatch(
+                    updateLog(
+                        this.id,
+                        data.message,
+                        file ? file.status : undefined,
+                    ),
+                );
                 break;
             }
 
-            case 'PRINT_ERR':
-                console.warn(data.message);
+            case 'PRINT_WARNING':
+                this.store.dispatch(
+                    updateLog(this.id, data.message, FileStatus.Warning),
+                );
+                break;
+
+            case 'PRINT_ERROR':
+                this.store.dispatch(
+                    updateLog(this.id, data.message, FileStatus.Error),
+                );
                 break;
 
             case 'RUNTIME_INITIALIZED': {
@@ -60,9 +76,12 @@ export default class XCIWorker {
                 }
 
                 this.store.dispatch(
-                    updateLog(this.id, 'WebAssembly runtime initialized.'),
+                    updateLog(
+                        this.id,
+                        'WebAssembly runtime initialized.',
+                        FileStatus.Ready,
+                    ),
                 );
-                this.store.dispatch(updateStatus(this.id, FileStatus.Ready));
 
                 break;
             }
@@ -74,6 +93,7 @@ export default class XCIWorker {
                     updateLog(
                         this.id,
                         `Created ${data.name} in virtual filesystem.`,
+                        FileStatus.Ready,
                         true,
                     ),
                 );

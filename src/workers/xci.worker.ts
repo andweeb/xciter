@@ -7,7 +7,7 @@ declare global {
 
 const types = {
     PRINT: 'PRINT',
-    PRINT_ERR: 'PRINT_ERR',
+    PRINT_ERROR: 'PRINT_ERROR',
     RUNTIME_INITIALIZED: 'RUNTIME_INITIALIZED',
     FILE_CREATED: 'FILE_CREATED',
     FILE_CONVERTED: 'FILE_CONVERTED',
@@ -35,7 +35,7 @@ self.Module = {
     },
     printErr: function(message: string) {
         if (message.replace(/\s/g, '').length) {
-            self.postMessage({ action: types.PRINT_ERR, message });
+            self.postMessage({ action: types.PRINT_ERROR, message });
         }
     },
 };
@@ -114,11 +114,13 @@ self.onmessage = (event: MessageEvent) => {
                 `/${data.filename}`,
             ]);
 
-            self.postMessage({
-                name: data.filename,
-                action: types.FILE_CONVERTED,
-                nspNames: nspNames,
-            });
+            if (nspNames.length) {
+                self.postMessage({
+                    name: data.filename,
+                    action: types.FILE_CONVERTED,
+                    nspNames: nspNames,
+                });
+            }
 
             break;
 

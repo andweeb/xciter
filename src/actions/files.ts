@@ -38,11 +38,13 @@ export function updateStatus(id: string, status: FileStatus): FilesActions {
 export function updateLog(
     id: string,
     message: string,
+    status?: FileStatus,
     overwrite?: boolean,
 ): FilesActions {
     return {
         id,
         message,
+        status,
         overwrite,
         type: UPDATE_LOG,
     };

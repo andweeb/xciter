@@ -59,7 +59,7 @@ const Footer: React.FunctionComponent<Props> = (props: Props) => {
                 disabled={isButtonDisabled}
                 className="convert-button"
             >
-                <div className="convert-button-text">convert</div>
+                convert
             </button>
             <style jsx>{`
                 .footer {
@@ -96,24 +96,19 @@ const Footer: React.FunctionComponent<Props> = (props: Props) => {
                     font-variant: all-small-caps;
                 }
                 .convert-button {
+                    border: none;
                     display: flex;
                     font-size: 20px;
-                    padding: 4px 25px;
                     border-radius: 4px;
                     align-items: center;
-                    font-variant: petite-caps;
+                    font-variant: small-caps;
+                    padding: 4px 25px 7px 25px;
                     opacity: ${isButtonDisabled ? 0.5 : 1};
                     color: ${color.alabaster};
                     background-color: ${color.chetwodeBlue};
                 }
-                ${!isButtonDisabled &&
-                    `
-                    .convert-button:hover {
-                        opacity: 0.9;
-                    }
-                `}
-                .convert-button-text {
-                    margin-left: 3px;
+                .convert-button:hover {
+                    opacity: ${isButtonDisabled ? `'inherit'` : 0.9};
                 }
             `}</style>
         </div>

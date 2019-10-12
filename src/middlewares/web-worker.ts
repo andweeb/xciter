@@ -30,7 +30,7 @@ const middleware: WebWorkerMiddleware = store => next => action => {
             store.dispatch(
                 updateLog(
                     action.id,
-                    'Setting up worker environment and WebAssembly runtime.',
+                    'Setting up worker environment and WebAssembly runtime...',
                 ),
             );
 
@@ -68,12 +68,20 @@ const middleware: WebWorkerMiddleware = store => next => action => {
                 const fileSize = abbreviateFileSize(event.loaded);
                 const message = `${fileSize} transferred to worker.`;
 
-                store.dispatch(updateLog(action.id, message, shouldOverwrite));
+                store.dispatch(
+                    updateLog(action.id, message, undefined, shouldOverwrite),
+                );
                 isFirstProgressMessage = false;
             };
 
             fileReader.onerror = (err: ProgressEvent<FileReader>) =>
-                console.error(`Error reading file`, err);
+                store.dispatch(
+                    updateLog(
+                        action.id,
+                        'Error reading file',
+                        FileStatus.Error,
+                    ),
+                );
 
             fileReader.onload = (event: ProgressEvent<FileReader>) => {
                 if (event.target && event.target.result) {
@@ -114,12 +122,20 @@ const middleware: WebWorkerMiddleware = store => next => action => {
                 const fileSize = abbreviateFileSize(event.loaded);
                 const message = `${fileSize} transferred to worker.`;
 
-                store.dispatch(updateLog(action.id, message, shouldOverwrite));
+                store.dispatch(
+                    updateLog(action.id, message, undefined, shouldOverwrite),
+                );
                 isFirstProgressMessage = false;
             };
 
             fileReader.onerror = (err: ProgressEvent<FileReader>) =>
-                console.error(`Error reading file`, err);
+                store.dispatch(
+                    updateLog(
+                        action.id,
+                        'Error reading file',
+                        FileStatus.Error,
+                    ),
+                );
 
             fileReader.onload = (event: ProgressEvent<FileReader>) => {
                 transferIndex = transferIndex + 1;

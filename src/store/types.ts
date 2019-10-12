@@ -7,6 +7,8 @@ export enum FileStatus {
     Converting,
     Downloading,
     Completed,
+    Warning,
+    Error,
 }
 
 // Keyset actions
@@ -54,6 +56,7 @@ export interface UpdateLogAction {
     id: string;
     message: string;
     overwrite?: boolean;
+    status?: FileStatus;
 }
 export interface InitWorkerAction {
     type: typeof INIT_WORKER;

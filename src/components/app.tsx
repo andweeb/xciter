@@ -6,12 +6,16 @@ import color from 'styles/color';
 import Footer from 'components/footer';
 import Header from 'components/header';
 import Workspace from 'components/workspace';
-import { addFiles, initWorker } from 'actions/files';
+import { addFiles, initWorker, updateLog, updateStatus } from 'actions/files';
 import { addKeyset } from 'actions/keyset';
+import { MAX_CHUNK_THRESHOLD } from 'lib/bytes';
 import { FileStatus, KeysetActions } from 'store/types';
 
 // Accept keyset file extensions defined in 4NXCI
 const keysetExtensions = ['.dat', '.txt', '.ini', '.keys'];
+
+const maxFileSizeMessage =
+    'Due to browser limitations, the maximum individual XCI file size is 1.5GB';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -53,7 +57,22 @@ const App = () => {
         }
         if (xciFiles.length) {
             dispatch(addFiles(xciFiles));
-            xciFiles.forEach(file => dispatch(initWorker(file.id)));
+
+            // Initialize worker for each file or display error
+            // message if file size exceeds default browser limit
+            xciFiles.forEach(file => {
+                if (file.size > MAX_CHUNK_THRESHOLD) {
+                    dispatch(
+                        updateLog(
+                            file.id,
+                            maxFileSizeMessage,
+                            FileStatus.Error,
+                        ),
+                    );
+                } else {
+                    dispatch(initWorker(file.id));
+                }
+            });
         }
     };
 

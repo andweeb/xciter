@@ -32,6 +32,7 @@ LDFLAGS = sha.o \
 		  ../mbedtls/library/libmbedtls.bc \
 		  ../mbedtls/library/libmbedx509.bc
 EMFLAGS = -s INVOKE_RUN=0 \
+		  -s EXIT_RUNTIME=1 \
 		  -s FORCE_FILESYSTEM=1 \
 		  -s ENVIRONMENT='worker' \
 		  -s ALLOW_MEMORY_GROWTH=1 \

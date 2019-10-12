@@ -30,6 +30,7 @@ const EmptyWorkspace: React.FunctionComponent<EmptyWorkspaceProps> = props => (
                 color: ${color.spindleBlue};
             }
             .instructions {
+                cursor: default;
                 user-select: none;
             }
         `}</style>

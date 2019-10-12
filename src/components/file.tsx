@@ -32,9 +32,7 @@ const statusTypes = {
     [StatusType.Warning]: [
         /*TODO*/
     ],
-    [StatusType.Error]: [
-        /*TODO*/
-    ],
+    [StatusType.Error]: [FileStatus.Error],
 };
 
 const File: React.FunctionComponent<Props> = props => {

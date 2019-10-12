@@ -77,7 +77,7 @@ export default function filesReducer(
                 ),
             };
 
-        case UPDATE_LOG:
+        case UPDATE_LOG: {
             const update = (file: File) =>
                 action.overwrite
                     ? [
@@ -85,12 +85,21 @@ export default function filesReducer(
                           action.message,
                       ]
                     : [...file.log, action.message];
+            let files = state.files.map(
+                applyFileUpdate(action.id, 'log', action.message, update),
+            );
+
+            if (action.status) {
+                files = files.map(
+                    applyFileUpdate(action.id, 'status', action.status),
+                );
+            }
+
             return {
                 ...state,
-                files: state.files.map(
-                    applyFileUpdate(action.id, 'log', action.message, update),
-                ),
+                files,
             };
+        }
 
         case INIT_WORKER: {
             return {
