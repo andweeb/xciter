@@ -1,1 +1,0 @@
-{"version":3,"file":"static/webpack/static/development/pages/_app.js.9d05f8ee86520a413403.hot-update.js","sources":["webpack:///./src/workers/xci.worker.ts"],"sourcesContent":["module.exports = function() {\n  return new Worker(\"/_next/\" + \"static/631471bef0705122dc5a.worker.js\");\n};"],"mappings":";;;;;;;;;AAAA;AACA;AACA;;;;A","sourceRoot":""}
