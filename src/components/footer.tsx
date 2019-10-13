@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon, { Size } from 'components/icon';
-import { createFile, createMultiPartFile } from 'actions/files';
+import { createFile, updateLog } from 'actions/files';
 import { MAX_CHUNK_THRESHOLD } from 'lib/bytes';
+import strategize from 'lib/strategize';
 import color from 'styles/color';
 import { FileStatus, Store } from 'store/types';
 
@@ -16,18 +17,25 @@ const Footer: React.FunctionComponent<Props> = (props: Props) => {
         state.keyset.file,
         state.files.files,
     ]);
-    const readyFiles = files.filter(file => file.status === FileStatus.Ready);
+    const readyFiles = files.filter(
+        file =>
+            file.status === FileStatus.Ready ||
+            file.status === FileStatus.Pending,
+    );
 
     const convert = useCallback(() => {
-        // TODO: Strategize and dispatch conversion process action for specific files
-        readyFiles.forEach(file =>
+        const [convertFiles, pendingFiles] = strategize(files);
+        convertFiles.forEach(file => dispatch(createFile(file.id, file)));
+        pendingFiles.forEach(file =>
             dispatch(
-                file.size > MAX_CHUNK_THRESHOLD
-                    ? createMultiPartFile(file.id, file)
-                    : createFile(file.id, file),
+                updateLog(
+                    file.id,
+                    'Pending on file conversions currently in progress',
+                    FileStatus.Pending,
+                ),
             ),
         );
-    }, [readyFiles]);
+    }, [files]);
 
     const isButtonDisabled = !keyset || !readyFiles.length;
     const keysetStatusColor =

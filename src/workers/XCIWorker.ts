@@ -1,10 +1,12 @@
 import { Store } from 'redux';
 import {
+    createFile,
     convertFile,
     downloadFile,
     updateLog,
     updateStatus,
 } from 'actions/files';
+import strategize from 'lib/strategize';
 import { FileStatus } from 'store/types';
 // @ts-ignore
 import WebWorker from './xci.worker';
@@ -14,7 +16,8 @@ export default class XCIWorker {
     store: Store;
     keyset: File;
     worker: Worker;
-    filename: string | null;
+    filename: string | null = null;
+    downloads: Array<File> = [];
 
     constructor(id: string, keyset: File, store: Store) {
         this.id = id;
@@ -22,7 +25,6 @@ export default class XCIWorker {
         this.worker = new WebWorker();
         this.worker.onmessage = this.onWorkerMessage;
         this.keyset = keyset;
-        this.filename = null;
     }
 
     createKeyset = () => {
@@ -138,13 +140,30 @@ export default class XCIWorker {
                 break;
             }
 
-            case 'WORKER_COMPLETED':
+            case 'WORKER_COMPLETED': {
                 this.store.dispatch(
                     updateLog(this.id, `Job completed for ${this.filename}.`),
                 );
 
+                // Restrategize and kick-off conversions for files that are ready or already pending
+                const { files } = this.store.getState().files;
+                const [convertFiles, pendingFiles] = strategize(files);
+                convertFiles.forEach(file =>
+                    this.store.dispatch(createFile(file.id, file)),
+                );
+                pendingFiles.forEach(file =>
+                    this.store.dispatch(
+                        updateLog(
+                            file.id,
+                            'Pending on file conversions currently in progress',
+                            FileStatus.Pending,
+                        ),
+                    ),
+                );
+
                 this.terminateWorker();
                 break;
+            }
         }
     };
 
