@@ -375,6 +375,25 @@ module.exports = _createClass;
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime-corejs2/helpers/esm/arrayWithHoles.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/helpers/esm/arrayWithHoles.js ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _arrayWithHoles; });
+/* harmony import */ var _core_js_array_is_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core-js/array/is-array */ "./node_modules/@babel/runtime-corejs2/core-js/array/is-array.js");
+/* harmony import */ var _core_js_array_is_array__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_core_js_array_is_array__WEBPACK_IMPORTED_MODULE_0__);
+
+function _arrayWithHoles(arr) {
+  if (_core_js_array_is_array__WEBPACK_IMPORTED_MODULE_0___default()(arr)) return arr;
+}
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime-corejs2/helpers/esm/arrayWithoutHoles.js":
 /*!******************************************************************************!*\
   !*** ./node_modules/@babel/runtime-corejs2/helpers/esm/arrayWithoutHoles.js ***!
@@ -665,6 +684,63 @@ function _iterableToArray(iter) {
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime-corejs2/helpers/esm/iterableToArrayLimit.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/helpers/esm/iterableToArrayLimit.js ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _iterableToArrayLimit; });
+/* harmony import */ var _core_js_get_iterator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core-js/get-iterator */ "./node_modules/@babel/runtime-corejs2/core-js/get-iterator.js");
+/* harmony import */ var _core_js_get_iterator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_core_js_get_iterator__WEBPACK_IMPORTED_MODULE_0__);
+
+function _iterableToArrayLimit(arr, i) {
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = _core_js_get_iterator__WEBPACK_IMPORTED_MODULE_0___default()(arr), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime-corejs2/helpers/esm/nonIterableRest.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/helpers/esm/nonIterableRest.js ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _nonIterableRest; });
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance");
+}
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime-corejs2/helpers/esm/nonIterableSpread.js":
 /*!******************************************************************************!*\
   !*** ./node_modules/@babel/runtime-corejs2/helpers/esm/nonIterableSpread.js ***!
@@ -768,6 +844,28 @@ function _setPrototypeOf(o, p) {
   };
 
   return _setPrototypeOf(o, p);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime-corejs2/helpers/esm/slicedToArray.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/helpers/esm/slicedToArray.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _slicedToArray; });
+/* harmony import */ var _arrayWithHoles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithHoles */ "./node_modules/@babel/runtime-corejs2/helpers/esm/arrayWithHoles.js");
+/* harmony import */ var _iterableToArrayLimit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArrayLimit */ "./node_modules/@babel/runtime-corejs2/helpers/esm/iterableToArrayLimit.js");
+/* harmony import */ var _nonIterableRest__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./nonIterableRest */ "./node_modules/@babel/runtime-corejs2/helpers/esm/nonIterableRest.js");
+
+
+
+function _slicedToArray(arr, i) {
+  return Object(_arrayWithHoles__WEBPACK_IMPORTED_MODULE_0__["default"])(arr) || Object(_iterableToArrayLimit__WEBPACK_IMPORTED_MODULE_1__["default"])(arr, i) || Object(_nonIterableRest__WEBPACK_IMPORTED_MODULE_2__["default"])();
 }
 
 /***/ }),
@@ -13078,10 +13176,11 @@ function updateStatus(id, status) {
     type: store_types__WEBPACK_IMPORTED_MODULE_0__["UPDATE_STATUS"]
   };
 }
-function updateLog(id, message, overwrite) {
+function updateLog(id, message, status, overwrite) {
   return {
     id: id,
     message: message,
+    status: status,
     overwrite: overwrite,
     type: store_types__WEBPACK_IMPORTED_MODULE_0__["UPDATE_LOG"]
   };
@@ -13156,6 +13255,103 @@ function abbreviateFileSize(bytes) {
 
 /***/ }),
 
+/***/ "./src/lib/strategize.ts":
+/*!*******************************!*\
+  !*** ./src/lib/strategize.ts ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return strategize; });
+/* harmony import */ var _babel_runtime_corejs2_core_js_get_iterator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/get-iterator */ "./node_modules/@babel/runtime-corejs2/core-js/get-iterator.js");
+/* harmony import */ var _babel_runtime_corejs2_core_js_get_iterator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_get_iterator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var lib_bytes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lib/bytes */ "./src/lib/bytes.ts");
+/* harmony import */ var store_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! store/types */ "./src/store/types.ts");
+
+
+ // Limit of the max number of bytes that will be processed at a given time.
+
+var MAX_TOTAL_BYTES = lib_bytes__WEBPACK_IMPORTED_MODULE_1__["MAX_CHUNK_THRESHOLD"] * 2; // Devise file conversion strategy depending on file count and individual statuses and sizes.
+// Return tuple of lists containing files to convert and the remaining files to be pending.
+
+function strategize(files) {
+  var consideredFiles = [];
+  var convertFiles = [];
+  var pendingFiles = [];
+  var smallestFileSize = Infinity; // Get total size of files currently being processed
+
+  var processingBytes = 0; // Collect current file state details based on file statuses
+
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = _babel_runtime_corejs2_core_js_get_iterator__WEBPACK_IMPORTED_MODULE_0___default()(files), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var file = _step.value;
+
+      switch (+file.status) {
+        case store_types__WEBPACK_IMPORTED_MODULE_2__["FileStatus"].Preparing:
+        case store_types__WEBPACK_IMPORTED_MODULE_2__["FileStatus"].Converting:
+        case store_types__WEBPACK_IMPORTED_MODULE_2__["FileStatus"].Downloading:
+          processingBytes += file.size;
+          break;
+
+        case store_types__WEBPACK_IMPORTED_MODULE_2__["FileStatus"].Ready:
+        case store_types__WEBPACK_IMPORTED_MODULE_2__["FileStatus"].Pending:
+          if (file.size < smallestFileSize) {
+            smallestFileSize = file.size;
+          }
+
+          consideredFiles.push(file);
+          break;
+      }
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+        _iterator["return"]();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  var capacity = MAX_TOTAL_BYTES - processingBytes; // No files can be processed if the smallest file is over capacity
+
+  if (smallestFileSize > capacity) {
+    return [[], consideredFiles];
+  } // Use a reverse greedy approximation to solve the 0-1 knapsack problem to prioritize
+  // the parallelization of processing larger files one at a time with smaller files
+
+
+  consideredFiles.sort(function (a, b) {
+    return b.size - a.size;
+  });
+
+  for (var _i = 0, _consideredFiles = consideredFiles; _i < _consideredFiles.length; _i++) {
+    var _file = _consideredFiles[_i];
+
+    if (capacity - _file.size > 0) {
+      convertFiles.push(_file);
+      capacity -= _file.size;
+    } else {
+      pendingFiles.push(_file);
+    }
+  }
+
+  return [convertFiles, pendingFiles];
+}
+
+/***/ }),
+
 /***/ "./src/middlewares/web-worker.ts":
 /*!***************************************!*\
   !*** ./src/middlewares/web-worker.ts ***!
@@ -13176,6 +13372,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 // Maintain a map of workers in this middleware
 var workers = new _babel_runtime_corejs2_core_js_map__WEBPACK_IMPORTED_MODULE_0___default.a();
 
@@ -13189,7 +13386,7 @@ var middleware = function middleware(store) {
         case store_types__WEBPACK_IMPORTED_MODULE_1__["INIT_WORKER"]:
           {
             var keyset = state.keyset.file;
-            store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_2__["updateLog"])(action.id, 'Setting up worker environment and WebAssembly runtime.'));
+            store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_2__["updateLog"])(action.id, 'Setting up worker environment and WebAssembly runtime...'));
             workers.set(action.id, new workers_XCIWorker__WEBPACK_IMPORTED_MODULE_4__["default"](action.id, keyset, store));
             break;
           }
@@ -13222,12 +13419,12 @@ var middleware = function middleware(store) {
               var shouldOverwrite = !isFirstProgressMessage;
               var fileSize = Object(lib_bytes__WEBPACK_IMPORTED_MODULE_3__["abbreviateFileSize"])(event.loaded);
               var message = "".concat(fileSize, " transferred to worker.");
-              store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_2__["updateLog"])(action.id, message, shouldOverwrite));
+              store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_2__["updateLog"])(action.id, message, undefined, shouldOverwrite));
               isFirstProgressMessage = false;
             };
 
             fileReader.onerror = function (err) {
-              return console.error("Error reading file", err);
+              return store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_2__["updateLog"])(action.id, 'Error reading file', store_types__WEBPACK_IMPORTED_MODULE_1__["FileStatus"].Error));
             };
 
             fileReader.onload = function (event) {
@@ -13261,12 +13458,12 @@ var middleware = function middleware(store) {
               var shouldOverwrite = !_isFirstProgressMessage;
               var fileSize = Object(lib_bytes__WEBPACK_IMPORTED_MODULE_3__["abbreviateFileSize"])(event.loaded);
               var message = "".concat(fileSize, " transferred to worker.");
-              store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_2__["updateLog"])(action.id, message, shouldOverwrite));
+              store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_2__["updateLog"])(action.id, message, undefined, shouldOverwrite));
               _isFirstProgressMessage = false;
             };
 
             _fileReader.onerror = function (err) {
-              return console.error("Error reading file", err);
+              return store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_2__["updateLog"])(action.id, 'Error reading file', store_types__WEBPACK_IMPORTED_MODULE_1__["FileStatus"].Error));
             };
 
             _fileReader.onload = function (event) {
@@ -13394,13 +13591,21 @@ function filesReducer() {
       });
 
     case store_types__WEBPACK_IMPORTED_MODULE_3__["UPDATE_LOG"]:
-      var update = function update(file) {
-        return action.overwrite ? [].concat(Object(_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(file.log.slice(0, file.log.length - 1)), [action.message]) : [].concat(Object(_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(file.log), [action.message]);
-      };
+      {
+        var update = function update(file) {
+          return action.overwrite ? [].concat(Object(_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(file.log.slice(0, file.log.length - 1)), [action.message]) : [].concat(Object(_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(file.log), [action.message]);
+        };
 
-      return Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_0__["default"])({}, state, {
-        files: state.files.map(applyFileUpdate(action.id, 'log', action.message, update))
-      });
+        var files = state.files.map(applyFileUpdate(action.id, 'log', action.message, update));
+
+        if (action.status) {
+          files = files.map(applyFileUpdate(action.id, 'status', action.status));
+        }
+
+        return Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_0__["default"])({}, state, {
+          files: files
+        });
+      }
 
     case store_types__WEBPACK_IMPORTED_MODULE_3__["INIT_WORKER"]:
       {
@@ -13541,6 +13746,8 @@ var FileStatus; // Keyset actions
   FileStatus[FileStatus["Converting"] = 5] = "Converting";
   FileStatus[FileStatus["Downloading"] = 6] = "Downloading";
   FileStatus[FileStatus["Completed"] = 7] = "Completed";
+  FileStatus[FileStatus["Warning"] = 8] = "Warning";
+  FileStatus[FileStatus["Error"] = 9] = "Error";
 })(FileStatus || (FileStatus = {}));
 
 var ADD_KEYSET = 'ADD_KEYSET'; // Files actions
@@ -13567,13 +13774,17 @@ var DOWNLOAD_FILE = 'DOWNLOAD_FILE'; // Keyset state
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return XCIWorker; });
-/* harmony import */ var _babel_runtime_corejs2_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/classCallCheck */ "./node_modules/@babel/runtime-corejs2/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/createClass */ "./node_modules/@babel/runtime-corejs2/helpers/esm/createClass.js");
-/* harmony import */ var _babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/defineProperty */ "./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js");
-/* harmony import */ var actions_files__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! actions/files */ "./src/actions/files.ts");
-/* harmony import */ var store_types__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! store/types */ "./src/store/types.ts");
-/* harmony import */ var _xci_worker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./xci.worker */ "./src/workers/xci.worker.ts");
-/* harmony import */ var _xci_worker__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_xci_worker__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/slicedToArray */ "./node_modules/@babel/runtime-corejs2/helpers/esm/slicedToArray.js");
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/classCallCheck */ "./node_modules/@babel/runtime-corejs2/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/createClass */ "./node_modules/@babel/runtime-corejs2/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/defineProperty */ "./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js");
+/* harmony import */ var actions_files__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! actions/files */ "./src/actions/files.ts");
+/* harmony import */ var lib_strategize__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lib/strategize */ "./src/lib/strategize.ts");
+/* harmony import */ var store_types__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! store/types */ "./src/store/types.ts");
+/* harmony import */ var _xci_worker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./xci.worker */ "./src/workers/xci.worker.ts");
+/* harmony import */ var _xci_worker__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_xci_worker__WEBPACK_IMPORTED_MODULE_7__);
+
+
 
 
 
@@ -13588,19 +13799,21 @@ function () {
   function XCIWorker(id, keyset, store) {
     var _this = this;
 
-    Object(_babel_runtime_corejs2_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, XCIWorker);
+    Object(_babel_runtime_corejs2_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, XCIWorker);
 
-    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "id", void 0);
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "id", void 0);
 
-    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "store", void 0);
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "store", void 0);
 
-    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "keyset", void 0);
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "keyset", void 0);
 
-    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "worker", void 0);
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "worker", void 0);
 
-    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "filename", void 0);
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "filename", null);
 
-    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "createKeyset", function () {
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "downloads", []);
+
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "createKeyset", function () {
       var fileReader = new FileReader();
 
       fileReader.onload = function (event) {
@@ -13612,19 +13825,31 @@ function () {
       fileReader.readAsArrayBuffer(_this.keyset);
     });
 
-    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "onWorkerMessage", function (event) {
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "onWorkerMessage", function (event) {
       var data = event.data;
 
       switch (data.action) {
         case 'PRINT':
           {
-            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_3__["updateLog"])(_this.id, data.message));
+            var files = _this.store.getState().files.files;
+
+            var file = files.find(function (file) {
+              return file.id === _this.id;
+            });
+
+            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["updateLog"])(_this.id, data.message, file ? file.status : undefined));
 
             break;
           }
 
-        case 'PRINT_ERR':
-          console.warn(data.message);
+        case 'PRINT_WARNING':
+          _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["updateLog"])(_this.id, data.message, store_types__WEBPACK_IMPORTED_MODULE_6__["FileStatus"].Warning));
+
+          break;
+
+        case 'PRINT_ERROR':
+          _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["updateLog"])(_this.id, data.message, store_types__WEBPACK_IMPORTED_MODULE_6__["FileStatus"].Error));
+
           break;
 
         case 'RUNTIME_INITIALIZED':
@@ -13633,9 +13858,7 @@ function () {
               _this.createKeyset();
             }
 
-            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_3__["updateLog"])(_this.id, 'WebAssembly runtime initialized.'));
-
-            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_3__["updateStatus"])(_this.id, store_types__WEBPACK_IMPORTED_MODULE_4__["FileStatus"].Ready));
+            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["updateLog"])(_this.id, 'WebAssembly runtime initialized.', store_types__WEBPACK_IMPORTED_MODULE_6__["FileStatus"].Ready));
 
             break;
           }
@@ -13643,21 +13866,21 @@ function () {
         case 'FILE_CREATED':
           _this.filename = data.name;
 
-          _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_3__["updateLog"])(_this.id, "Created ".concat(data.name, " in virtual filesystem."), true));
+          _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["updateLog"])(_this.id, "Created ".concat(data.name, " in virtual filesystem."), store_types__WEBPACK_IMPORTED_MODULE_6__["FileStatus"].Ready, true));
 
           if (data.fileType === 'xci') {
-            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_3__["convertFile"])(_this.id));
+            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["convertFile"])(_this.id));
           }
 
           break;
 
         case 'FILE_CONVERTED':
           {
-            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_3__["updateLog"])(_this.id, "Converted ".concat(data.name, "."))); // Trigger NSP file downloads
+            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["updateLog"])(_this.id, "Converted ".concat(data.name, "."))); // Trigger NSP file downloads
 
 
             data.nspNames.forEach(function (nspName) {
-              return _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_3__["downloadFile"])(_this.id, nspName));
+              return _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["downloadFile"])(_this.id, nspName));
             });
             break;
           }
@@ -13675,29 +13898,45 @@ function () {
 
             document.body.removeChild(a);
 
-            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_3__["updateStatus"])(_this.id, store_types__WEBPACK_IMPORTED_MODULE_4__["FileStatus"].Completed));
+            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["updateStatus"])(_this.id, store_types__WEBPACK_IMPORTED_MODULE_6__["FileStatus"].Completed));
 
             break;
           }
 
         case 'WORKER_COMPLETED':
-          _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_3__["updateLog"])(_this.id, "Job completed for ".concat(_this.filename, ".")));
+          {
+            _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["updateLog"])(_this.id, "Job completed for ".concat(_this.filename, "."))); // Restrategize and kick-off conversions for files that are ready or already pending
 
-          _this.terminateWorker();
 
-          break;
+            var _files = _this.store.getState().files.files;
+
+            var _strategize = Object(lib_strategize__WEBPACK_IMPORTED_MODULE_5__["default"])(_files),
+                _strategize2 = Object(_babel_runtime_corejs2_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_strategize, 2),
+                convertFiles = _strategize2[0],
+                pendingFiles = _strategize2[1];
+
+            convertFiles.forEach(function (file) {
+              return _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["createFile"])(file.id, file));
+            });
+            pendingFiles.forEach(function (file) {
+              return _this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["updateLog"])(file.id, 'Pending on file conversions currently in progress', store_types__WEBPACK_IMPORTED_MODULE_6__["FileStatus"].Pending));
+            });
+
+            _this.terminateWorker();
+
+            break;
+          }
       }
     });
 
     this.id = id;
     this.store = store;
-    this.worker = new _xci_worker__WEBPACK_IMPORTED_MODULE_5___default.a();
+    this.worker = new _xci_worker__WEBPACK_IMPORTED_MODULE_7___default.a();
     this.worker.onmessage = this.onWorkerMessage;
     this.keyset = keyset;
-    this.filename = null;
   }
 
-  Object(_babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(XCIWorker, [{
+  Object(_babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(XCIWorker, [{
     key: "createFile",
     value: function createFile(fileType, name, data) {
       var message = {
@@ -13738,7 +13977,7 @@ function () {
   }, {
     key: "downloadFile",
     value: function downloadFile(nspName) {
-      this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_3__["updateLog"])(this.id, "Downloading ".concat(nspName, "...")));
+      this.store.dispatch(Object(actions_files__WEBPACK_IMPORTED_MODULE_4__["updateLog"])(this.id, "Downloading ".concat(nspName, "...")));
       this.worker.postMessage({
         filename: nspName,
         action: 'DOWNLOAD_FILE'
@@ -13766,7 +14005,7 @@ function () {
 /***/ (function(module, exports) {
 
 module.exports = function() {
-  return new Worker("/_next/" + "static/a072a1fce1244615fcb2.worker.js");
+  return new Worker("/_next/" + "static/e73bc36dde694bcdc350.worker.js");
 };
 
 /***/ }),
