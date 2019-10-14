@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import App from 'components/app';
 import color from 'styles/color';
+import GithubCorner from 'components/github-corner';
 
 const Root = () => {
     return (
@@ -14,6 +15,7 @@ const Root = () => {
                     rel="stylesheet"
                     href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800" />
             </Head>
+            <GithubCorner />
             <App />
             <style jsx global>{`
                 body {
