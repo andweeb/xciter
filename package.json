@@ -16,7 +16,7 @@
         "@zeit/next-workers": "^1.0.0",
         "boxicons": "^2.0.3",
         "next": "^9.0.7",
-        "next-redux-wrapper": "^4.0.0",
+        "next-redux-wrapper": "^6.0.0",
         "react": "^16.10.1",
         "react-dom": "^16.10.1",
         "react-dropzone": "^10.1.9",
