@@ -17,8 +17,8 @@
         "boxicons": "^2.0.3",
         "next": "^9.0.7",
         "next-redux-wrapper": "^4.0.0",
-        "react": "^16.10.1",
-        "react-dom": "^16.10.1",
+        "react": "^17.0.0",
+        "react-dom": "^17.0.0",
         "react-dropzone": "^10.1.9",
         "react-redux": "^7.1.1",
         "worker-loader": "^2.0.0"
